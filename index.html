@@ -141,6 +141,10 @@
             object-fit: cover;
         }
 
+        .header-logo-wrap.icn-zoom img {
+            transform: scale(1.42);
+        }
+
         /* Candado Administrador */
         .admin-controls {
             display: flex;
@@ -226,6 +230,11 @@
             height: 100%;
             object-fit: cover;
             display: block;
+        }
+
+        /* Ajuste de escala para el logo de ICN */
+        .card-logo-container.icn img {
+            transform: scale(1.42);
         }
 
         .career-badge {
@@ -396,7 +405,7 @@
         <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
             <!-- Miniaturas en la barra superior -->
             <div class="brand-logos">
-                <div class="header-logo-wrap" title="CEE ICN">
+                <div class="header-logo-wrap icn-zoom" title="CEE ICN">
                     <img src="LOGO CEE ICN PNG.png" alt="CEE ICN">
                 </div>
                 <div class="header-logo-wrap" title="CEE ICC">
