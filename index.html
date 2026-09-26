@@ -13,9 +13,9 @@
             --dark: #0f172a;
             --dark2: #1e293b;
             --steel: #475569;
-            --icn: #3b82f6;     /* Azul Civil Construcción */
-            --icc: #ea580c;     /* Naranja Construcción */
-            --itra: #10b981;    /* Verde Transporte */
+            --icn: #3b82f6;     /* Azul ICN */
+            --icc: #ea580c;     /* Naranja ICC */
+            --itra: #10b981;    /* Verde ITRA */
         }
 
         * {
@@ -47,7 +47,7 @@
             z-index: 0;
         }
 
-        /* Cinta de Precaución Superior */
+        /* Cinta de Precaución */
         .caution-tape-top {
             position: fixed;
             top: 0; left: 0; width: 200%; height: 26px;
@@ -116,6 +116,31 @@
             margin: 6px 0 0 0;
         }
 
+        .brand-logos {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .header-logo-wrap {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--orange);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header-logo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         /* Candado Administrador */
         .admin-controls {
             display: flex;
@@ -151,8 +176,8 @@
         }
 
         .career-card {
-            border-radius: 18px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 22px 18px;
             background: #f8fafc;
             border: 2.5px solid #e2e8f0;
             position: relative;
@@ -160,25 +185,57 @@
             flex-direction: column;
             align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-            transition: transform 0.25s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
         .career-card:hover {
             transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
 
         .career-card.icn { border-color: var(--icn); }
         .career-card.icc { border-color: var(--icc); }
         .career-card.itra { border-color: var(--itra); }
 
+        /* Contenedor del Logo de cada Centro de Alumnos */
+        .card-logo-container {
+            width: 82px;
+            height: 82px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+            border: 3px solid;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .career-card:hover .card-logo-container {
+            transform: scale(1.08) rotate(4deg);
+        }
+
+        .card-logo-container.icn { border-color: var(--icn); }
+        .card-logo-container.icc { border-color: var(--icc); }
+        .card-logo-container.itra { border-color: var(--itra); }
+
+        .card-logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
         .career-badge {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 900;
-            padding: 4px 14px;
+            padding: 3px 14px;
             border-radius: 20px;
             color: white;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .badge-icn { background: var(--icn); }
@@ -335,17 +392,36 @@
             <h1>🏆 Copa ICT 2026</h1>
             <p>Conteo Oficial de Asistencia y Participación · 06 al 09 de Octubre</p>
         </div>
-        <div class="admin-controls">
-            <button class="btn-admin" id="btnToggleAdmin" onclick="solicitarAccesoAdmin()">
-                <span id="adminLockIcon">🔒</span> <span id="adminStatusText">Acceso Organizador</span>
-            </button>
+        
+        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <!-- Miniaturas en la barra superior -->
+            <div class="brand-logos">
+                <div class="header-logo-wrap" title="CEE ICN">
+                    <img src="LOGO CEE ICN PNG.jpg" alt="CEE ICN">
+                </div>
+                <div class="header-logo-wrap" title="CEE ICC">
+                    <img src="LOGO ICC.jpg" alt="CEE ICC">
+                </div>
+                <div class="header-logo-wrap" title="CEEITRA">
+                    <img src="Logo ICTRA.jpg" alt="CEEITRA">
+                </div>
+            </div>
+
+            <div class="admin-controls">
+                <button class="btn-admin" id="btnToggleAdmin" onclick="solicitarAccesoAdmin()">
+                    <span id="adminLockIcon">🔒</span> <span id="adminStatusText">Acceso Organizador</span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Podio Principal -->
+    <!-- Podio Principal con Logos -->
     <div class="podium-container">
         <!-- ICN -->
         <div class="career-card icn">
+            <div class="card-logo-container icn">
+                <img src="LOGO CEE ICN PNG.jpg" alt="Logo CEE ICN">
+            </div>
             <span class="career-badge badge-icn">ICN</span>
             <div class="career-title">Ing. Civil en Construcción</div>
             <div class="career-total" id="total-icn">0</div>
@@ -354,6 +430,9 @@
 
         <!-- ICC -->
         <div class="career-card icc">
+            <div class="card-logo-container icc">
+                <img src="LOGO ICC.jpg" alt="Logo CEE ICC">
+            </div>
             <span class="career-badge badge-icc">ICC</span>
             <div class="career-title">Ingeniería en Construcción</div>
             <div class="career-total" id="total-icc">0</div>
@@ -362,6 +441,9 @@
 
         <!-- ITRA -->
         <div class="career-card itra">
+            <div class="card-logo-container itra">
+                <img src="Logo ICTRA.jpg" alt="Logo CEEITRA">
+            </div>
             <span class="career-badge badge-itra">ITRA</span>
             <div class="career-title">Ing. Civil en Transporte / Transporte</div>
             <div class="career-total" id="total-itra">0</div>
@@ -506,7 +588,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-    // Credenciales integradas de tu proyecto
     const firebaseConfig = {
         apiKey: "AIzaSyBF_FZltIXb2TWF2EQDaXMNynO73WY4wgw",
         authDomain: "copa-ict.firebaseapp.com",
@@ -522,7 +603,6 @@
     const db = firebase.database();
     const dataRef = db.ref('copa_ict_2026');
 
-    // Clave para desbloquear edición
     const ADMIN_PIN = "ict2026"; 
     let esAdmin = false;
 
@@ -533,7 +613,6 @@
         d4: { icn: 0, icc: 0, itra: 0 }
     };
 
-    // Sincronización en tiempo real desde la nube
     dataRef.on('value', (snapshot) => {
         const val = snapshot.val();
         if (val) {
@@ -567,7 +646,6 @@
         document.getElementById('total-icc').textContent = totalICC;
         document.getElementById('total-itra').textContent = totalITRA;
 
-        // Barra de proporción
         const granTotal = totalICN + totalICC + totalITRA;
         if (granTotal > 0) {
             const pICN = ((totalICN / granTotal) * 100).toFixed(1);
