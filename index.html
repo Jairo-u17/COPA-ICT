@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo ICT - Semana de Escuela 🏗️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #ea580c;
+            --orange-light: #fb923c;
+            --yellow: #facc15;
+            --yellow-pale: #fef9c3;
+            --dark: #0f172a;
+            --dark2: #1e293b;
+            --steel: #475569;
+            --grey: #57534e;
+            --green: #22c55e;
+            --blue: #1a365d;
+            --blue-light: #3b82f6;
+            --glow-orange: rgba(234, 88, 12, 0.6);
+            --glow-yellow: rgba(250, 204, 21, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ══════════════════════════════════════════════
+           FONDO ANIMADO – Blueprint Grid + Partículas
+           ══════════════════════════════════════════════ */
+        .bg-blueprint {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background:
+                linear-gradient(rgba(15,23,42,0.92), rgba(15,23,42,0.92)),
+                linear-gradient(90deg, rgba(59,130,246,0.08) 1px, transparent 1px),
+                linear-gradient(rgba(59,130,246,0.08) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            z-index: 0;
+        }
+
+        .bg-blueprint::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(234,88,12,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(250,204,21,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(59,130,246,0.06) 0%, transparent 60%);
+            animation: bgPulse 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgPulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Canvas de partículas flotantes */
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ══════════════════════════════
+           CINTA DE PRECAUCIÓN ANIMADA
+           ══════════════════════════════ */
+        .caution-tape-top {
+            position: fixed;
+            top: 0; left: 0;
+            width: 200%;
+            height: 28px;
+            background: repeating-linear-gradient(
+                -45deg,
+                #facc15, #facc15 20px,
+                #292524 20px, #292524 40px
+            );
+            animation: scrollTape 12s linear infinite;
+            z-index: 50;
+            box-shadow: 0 3px 15px rgba(250,204,21,0.3);
+        }
+
+        .caution-tape-top::after {
+            content: "⚠ ZONA DE CONSTRUCCIÓN — SEMANA ICT — ⚠ ZONA DE CONSTRUCCIÓN — SEMANA ICT — ⚠ ZONA DE CONSTRUCCIÓN — SEMANA ICT —";
+            position: absolute;
+            top: 50%; left: 0;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            font-size: 10px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 3px;
+            animation: scrollText 40s linear infinite;
+        }
+
+        @keyframes scrollTape {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateY(-50%) translateX(0); }
+            100% { transform: translateY(-50%) translateX(-50%); }
+        }
+
+        /* ════════════════════════
+           CONTENEDOR PRINCIPAL
+           ════════════════════════ */
+        .container {
+            max-width: 1060px;
+            width: 100%;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 34px;
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(255,255,255,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            margin-top: 50px;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        /* Bordes con gradiente animado */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -3px; left: -3px; right: -3px; bottom: -3px;
+            background: linear-gradient(90deg, var(--orange), var(--yellow), var(--blue-light), var(--orange));
+            background-size: 300% 100%;
+            border-radius: 30px;
+            z-index: -1;
+            animation: borderGlow 6s ease-in-out infinite;
+        }
+
+        .container::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.97);
+            border-radius: 28px;
+            z-index: -1;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ════════════════
+           HEADER
+           ════════════════ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 22px;
+            margin-bottom: 28px;
+            gap: 20px;
+            position: relative;
+        }
+
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 4px;
+            background: repeating-linear-gradient(-45deg, var(--yellow), var(--yellow) 8px, var(--dark) 8px, var(--dark) 16px);
+            border-radius: 2px;
+        }
+
+        .title-section {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        /* Casco con efecto de brillo */
+        .hardhat-icon {
+            width: 72px;
+            height: 72px;
+            filter: drop-shadow(0 4px 12px rgba(234,88,12,0.35));
+            animation: floatHardhat 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatHardhat {
+            0% { transform: translateY(0) rotate(-5deg); }
+            100% { transform: translateY(-12px) rotate(5deg); }
+        }
+
+        .title-section h1 {
+            color: var(--dark);
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.15;
+            background: linear-gradient(135deg, var(--dark), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title-section p {
+            color: var(--orange);
+            font-size: 1rem;
+            font-weight: 800;
+            margin: 6px 0 0 0;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #fffbeb, #fff7ed);
+            border: 2px solid var(--orange-light);
+            border-radius: 16px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 20px rgba(234,88,12,0.12);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-box::before {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(transparent, rgba(250,204,21,0.1), transparent 30%);
+            animation: rotateBrand 6s linear infinite;
+        }
+
+        @keyframes rotateBrand {
+            100% { transform: rotate(360deg); }
+        }
+
+        .brand-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: var(--dark);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            border-bottom: 2px solid var(--orange);
+            padding-bottom: 4px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-logos {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-wrapper {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 2.5px solid var(--orange);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .logo-wrapper:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 6px 20px rgba(234,88,12,0.3);
+            border-color: var(--yellow);
+        }
+
+        .logo-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .logo-icn img { transform: scale(1.42); }
+
+        /* ══════════════════
+           CONFIG PANEL
+           ══════════════════ */
+        .config-panel {
+            display: flex;
+            gap: 15px;
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            padding: 14px 22px;
+            border-radius: 14px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+            border: 1px solid #fde68a;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
+            position: relative;
+        }
+
+        .config-panel::before {
+            content: "⚙️";
+            position: absolute;
+            left: 14px;
+            font-size: 18px;
+        }
+
+        .config-panel label {
+            font-weight: 800;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .config-panel input {
+            width: 78px;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            font-weight: 800;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .config-panel input:focus {
+            outline: none;
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(234,88,12,0.15);
+        }
+
+        /* ══════════════
+           BOTONES
+           ══════════════ */
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 14px 34px;
+            font-size: 17px;
+            font-weight: 800;
+            border: none;
+            border-radius: 14px;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(transparent, rgba(255,255,255,0.15), transparent);
+            transform: rotate(45deg) translateX(-100%);
+            transition: 0.6s;
+        }
+
+        button:hover::after {
+            transform: rotate(45deg) translateX(100%);
+        }
+
+        .btn-draw {
+            background: linear-gradient(135deg, var(--orange), #c2410c);
+            color: white;
+            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-draw:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(234, 88, 12, 0.5);
+        }
+
+        .btn-draw:disabled {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, var(--dark), #334155);
+            color: white;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.35);
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.45);
+        }
+
+        /* ════════════════════════
+           ESCENARIO PRINCIPAL
+           ════════════════════════ */
+        .stage-wrapper {
+            display: grid;
+            grid-template-columns: 85px 1fr 85px;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 28px;
+        }
+
+        .tradition-column {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .tradition-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fffbeb, #fff7ed);
+            padding: 12px;
+            border-radius: 50%;
+            border: 2px solid #fde68a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            width: 72px;
+            height: 72px;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .tradition-badge::before {
+            content: "";
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: conic-gradient(var(--orange), var(--yellow), var(--orange));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tradition-badge:hover {
+            transform: translateY(-6px) scale(1.1) rotate(8deg);
+            box-shadow: 0 10px 25px rgba(234,88,12,0.2);
+        }
+
+        .tradition-badge:hover::before { opacity: 1; }
+
+        .tradition-badge svg {
+            width: 44px;
+            height: 44px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+        }
+
+        .criollo-stage {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 18px;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #fffbeb, #fef3c7, #fff7ed);
+            border-radius: 22px;
+            border: 2px solid #fde68a;
+            box-shadow: inset 0 2px 15px rgba(0,0,0,0.03), 0 8px 25px rgba(0,0,0,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Patrón de blueprint dentro del escenario */
+        .criollo-stage::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px),
+                linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+
+        .cueca-dancer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dancer-svg {
+            width: 105px;
+            height: 135px;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+            transform-origin: bottom center;
+            transition: filter 0.3s;
+        }
+
+        .dancer-svg:hover {
+            filter: drop-shadow(0 8px 20px rgba(234,88,12,0.35));
+        }
+
+        .celebrate .crane-svg { animation: craneLift 0.6s ease-in-out infinite alternate; }
+        .celebrate .truck-svg { animation: truckBounce 0.6s ease-in-out infinite alternate; }
+
+        @keyframes craneLift {
+            0% { transform: translateY(0) rotate(-3deg); }
+            100% { transform: translateY(-14px) rotate(3deg) scale(1.06); }
+        }
+
+        @keyframes truckBounce {
+            0% { transform: translateY(0) rotate(2deg); }
+            100% { transform: translateY(-12px) rotate(-2deg) scale(1.06); }
+        }
+
+        /* ═══════════════════════════
+           BOLA DEL BINGO – 3D STYLE
+           ═══════════════════════════ */
+        .current-ball-wrapper {
+            position: relative;
+            width: 165px;
+            height: 165px;
+            border-radius: 50%;
+            box-shadow:
+                0 12px 35px rgba(0,0,0,0.4),
+                0 0 60px rgba(234,88,12,0.15),
+                inset 0 -8px 20px rgba(0,0,0,0.2);
+            user-select: none;
+            overflow: hidden;
+            border: 5px solid rgba(255,255,255,0.9);
+            flex-shrink: 0;
+            transition: box-shadow 0.3s;
+        }
+
+        .flag-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .flag-orange {
+            position: absolute; top: 0; left: 0; width: 50%; height: 50%;
+            background: linear-gradient(135deg, #ea580c, #dc2626);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .gear-svg { width: 28px; height: 28px; fill: #ffffff; animation: spinGear 8s linear infinite; }
+
+        @keyframes spinGear {
+            100% { transform: rotate(360deg); }
+        }
+
+        .flag-yellow {
+            position: absolute; top: 0; right: 0; width: 50%; height: 50%;
+            background: linear-gradient(135deg, #facc15, #fbbf24);
+        }
+        .flag-dark {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 50%;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+        }
+
+        /* Efecto de brillo 3D sobre la bola */
+        .ball-shine {
+            position: absolute;
+            top: 8%;
+            left: 15%;
+            width: 40%;
+            height: 30%;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.45), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .ball-content {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 112px; height: 112px;
+            background: rgba(15, 23, 42, 0.92);
+            border-radius: 50%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            border: 2.5px solid rgba(255, 255, 255, 0.8);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            z-index: 3;
+        }
+
+        .current-letter {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            line-height: 1;
+            color: var(--yellow);
+            text-shadow: 0 0 15px rgba(250,204,21,0.6), 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .current-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 50px;
+            font-weight: 900;
+            line-height: 1;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3), 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        .current-ball-wrapper.spinning {
+            animation: tombolaRoll 0.12s infinite alternate ease-in-out;
+            box-shadow:
+                0 0 50px rgba(250, 204, 21, 0.8),
+                0 0 100px rgba(234, 88, 12, 0.4),
+                inset 0 0 20px rgba(250,204,21,0.3);
+            border-color: var(--yellow);
+        }
+
+        .current-ball-wrapper.landed { animation: ballPop 0.65s ease-out; }
+
+        @keyframes tombolaRoll {
+            0% { transform: scale(0.94) rotate(-10deg); }
+            100% { transform: scale(1.06) rotate(10deg); }
+        }
+
+        @keyframes ballPop {
+            0% { transform: scale(0.4) rotate(-20deg); opacity: 0.5; }
+            50% { transform: scale(1.25) rotate(5deg); }
+            75% { transform: scale(0.93); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* ═══════════════════════════
+           ESTADÍSTICAS – Dashboard
+           ═══════════════════════════ */
+        .stats-dashboard {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--dark), #334155);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 14px;
+            text-align: center;
+            min-width: 140px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange), var(--yellow));
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--yellow);
+        }
+
+        .stat-value.orange { color: var(--orange-light); }
+
+        /* Barra de progreso */
+        .progress-wrapper {
+            margin-bottom: 22px;
+            padding: 0 4px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 18px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--orange), var(--yellow), var(--green));
+            background-size: 200% 100%;
+            border-radius: 10px;
+            transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            animation: progressShine 3s ease-in-out infinite;
+        }
+
+        .progress-bar-fill::after {
+            content: "";
+            position: absolute;
+            top: 0; right: 0; bottom: 0;
+            width: 30px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+            border-radius: 10px;
+        }
+
+        @keyframes progressShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--steel);
+            margin-top: 6px;
+        }
+
+        /* ═══════════════
+           HISTORIAL
+           ═══════════════ */
+        .history-wrapper { margin-bottom: 28px; }
+
+        .history-wrapper strong {
+            color: var(--dark);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .history-list {
+            margin-top: 10px;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            font-size: 15px;
+            color: #1e293b;
+            min-height: 52px;
+            max-height: 110px;
+            overflow-y: auto;
+            word-break: break-word;
+            font-weight: 600;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .history-list::-webkit-scrollbar { width: 6px; }
+        .history-list::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 3px; }
+        .history-list::-webkit-scrollbar-thumb { background: var(--orange-light); border-radius: 3px; }
+
+        /* ═════════════════════
+           TABLERO BINGO
+           ═════════════════════ */
+        .board-container {
+            position: relative;
+        }
+
+        .board-container h3 {
+            color: var(--dark);
+            margin-bottom: 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .board-bingo {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: linear-gradient(135deg, #fffbeb, #fef9c3);
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px solid #fde68a;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+            position: relative;
+        }
+
+        /* Mini grid pattern en el tablero */
+        .board-bingo::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px),
+                linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px);
+            background-size: 15px 15px;
+            border-radius: 16px;
+            pointer-events: none;
+        }
+
+        .bingo-row { display: flex; align-items: center; gap: 10px; }
+
+        .bingo-header-cell {
+            width: 52px;
+            height: 46px;
+            background: linear-gradient(135deg, var(--dark), #334155);
+            color: var(--yellow);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+
+        .bingo-numbers-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .ball-slot {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            color: #94a3b8;
+            font-weight: bold;
+            border-radius: 8px;
+            font-size: 13px;
+            border: 1.5px solid #e2e8f0;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: default;
+        }
+
+        .ball-slot:hover:not(.called) {
+            border-color: var(--orange-light);
+            transform: scale(1.08);
+            box-shadow: 0 2px 8px rgba(234,88,12,0.15);
+        }
+
+        .ball-slot.called {
+            background: linear-gradient(135deg, var(--orange), #dc2626);
+            color: white;
+            border-color: #991b1b;
+            font-weight: 800;
+            box-shadow: 0 3px 10px rgba(234, 88, 12, 0.4);
+            transform: scale(1.06);
+            animation: slotPop 0.45s ease-out;
+        }
+
+        @keyframes slotPop {
+            0% { transform: scale(1.4); background: var(--yellow); color: #000; }
+            100% { transform: scale(1.06); }
+        }
+
+        /* ══════════════════
+           BOTÓN PDF
+           ══════════════════ */
+        .bottom-left-btn {
+            position: fixed;
+            bottom: 18px;
+            left: 18px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            color: var(--dark);
+            border: 2px solid var(--orange);
+            padding: 10px 18px;
+            border-radius: 28px;
+            font-size: 13.5px;
+            font-weight: 800;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bottom-left-btn:hover {
+            background: linear-gradient(135deg, var(--orange), #c2410c);
+            color: #ffffff;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(234, 88, 12, 0.4);
+            border-color: transparent;
+        }
+
+        /* ══════════════════
+           RESPONSIVE
+           ══════════════════ */
+        @media (max-width: 820px) {
+            .header { flex-direction: column; text-align: center; }
+            .title-section { flex-direction: column; }
+            .title-section h1 { font-size: 1.5rem; }
+            .stage-wrapper { grid-template-columns: 1fr; }
+            .tradition-column { flex-direction: row; justify-content: center; gap: 15px; }
+            .criollo-stage { flex-wrap: wrap; }
+            .current-ball-wrapper { width: 140px; height: 140px; }
+            .ball-content { width: 98px; height: 98px; }
+            .current-num { font-size: 42px; }
+            .stats-dashboard { gap: 10px; }
+            .stat-card { min-width: 110px; padding: 10px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Capas de fondo -->
+<div class="bg-blueprint"></div>
+<canvas id="particles-canvas"></canvas>
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Cinta de precaución animada -->
+<div class="caution-tape-top"></div>
+
+<!-- Botón PDF -->
+<button class="bottom-left-btn" onclick="generarCartonesPDF()" title="Crear cartones listos para imprimir">
+    <span>🖨️</span> Generar Cartones PDF
+</button>
+
+<div class="container">
+    <header class="header">
+        <div class="title-section">
+            <!-- Casco de construcción SVG Blanco -->
+            <svg class="hardhat-icon" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="helmetGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#ffffff"/>
+                        <stop offset="100%" stop-color="#cbd5e1"/>
+                    </linearGradient>
+                    <linearGradient id="brimGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#e2e8f0"/>
+                        <stop offset="100%" stop-color="#94a3b8"/>
+                    </linearGradient>
+                </defs>
+                <path d="M15,58 Q15,20 50,16 Q85,20 85,58 Z" fill="url(#helmetGrad)" stroke="#94a3b8" stroke-width="2"/>
+                <rect x="10" y="53" width="80" height="12" rx="4" fill="url(#brimGrad)" stroke="#64748b" stroke-width="1.5"/>
+                <rect x="20" y="38" width="60" height="6" rx="3" fill="rgba(255,255,255,0.7)"/>
+                <line x1="50" y1="16" x2="50" y2="53" stroke="#94a3b8" stroke-width="1.5" opacity="0.5"/>
+                <ellipse cx="35" cy="30" rx="12" ry="6" fill="rgba(255,255,255,0.4)" transform="rotate(-15 35 30)"/>
+            </svg>
+
+            <div>
+                <h1>🏗️ Bingo Semana ICT</h1>
+                <p>Escuela de Ingeniería en Construcción y Transporte · PUCV</p>
+            </div>
+        </div>
+
+        <div class="brand-box">
+            <span class="brand-title">Semana ICT</span>
+            <div class="brand-logos">
+                <div class="logo-wrapper">
+                    <img src="Logo ICTRA.png" alt="Logo ICTRA">
+                </div>
+                <div class="logo-wrapper">
+                    <img src="LOGO ICC.png" alt="Logo ICC">
+                </div>
+                <div class="logo-wrapper logo-icn">
+                    <img src="LOGO CEE ICN PNG.png" alt="Logo CEE ICN">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="config-panel">
+        <label for="min-num">Desde:</label>
+        <input type="number" id="min-num" value="1" min="1">
+        <label for="max-num">Hasta:</label>
+        <input type="number" id="max-num" value="75" min="5">
+    </div>
+
+    <div class="actions">
+        <button id="btn-draw" class="btn-draw" onclick="sacarNumero()">🎲 ¡CANTAR NÚMERO!</button>
+        <button class="btn-reset" onclick="reiniciarJuego()">🔄 Reiniciar</button>
+    </div>
+
+    <div class="stage-wrapper">
+        <!-- Columna izquierda -->
+        <div class="tradition-column">
+            <!-- Cono vial -->
+            <div class="tradition-badge" title="Cono vial">
+                <svg viewBox="0 0 50 50">
+                    <polygon points="25,5 37,42 13,42" fill="#ea580c" stroke="#c2410c" stroke-width="1.5"/>
+                    <rect x="17" y="13" width="16" height="4" rx="1.5" fill="rgba(255,255,255,0.55)"/>
+                    <rect x="15" y="23" width="20" height="4" rx="1.5" fill="rgba(255,255,255,0.55)"/>
+                    <rect x="13" y="33" width="24" height="4" rx="1.5" fill="rgba(255,255,255,0.55)"/>
+                    <rect x="9" y="40" width="32" height="6" rx="2" fill="#44403c"/>
+                </svg>
+            </div>
+
+            <!-- Pala -->
+            <div class="tradition-badge" title="Herramienta">
+                <svg viewBox="0 0 50 50">
+                    <rect x="23" y="22" width="4" height="24" rx="1.5" fill="#92400e"/>
+                    <ellipse cx="25" cy="14" rx="10" ry="12" fill="#6b7280"/>
+                    <ellipse cx="25" cy="13" rx="8" ry="10" fill="#9ca3af"/>
+                    <line x1="25" y1="5" x2="25" y2="22" stroke="#4b5563" stroke-width="1.5"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Escenario -->
+        <div class="criollo-stage" id="stage">
+            <!-- Grúa -->
+            <div class="cueca-dancer" id="huaso-dancer">
+                <svg class="dancer-svg crane-svg" viewBox="0 0 120 150">
+                    <defs>
+                        <linearGradient id="craneGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#fbbf24"/>
+                            <stop offset="100%" stop-color="#f59e0b"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="40" y="130" width="40" height="15" rx="3" fill="#57534e" stroke="#44403c" stroke-width="1.5"/>
+                    <rect x="53" y="25" width="14" height="108" fill="url(#craneGrad)" stroke="#ca8a04" stroke-width="1"/>
+                    <line x1="53" y1="30" x2="67" y2="50" stroke="#b45309" stroke-width="0.8" opacity="0.5"/>
+                    <line x1="67" y1="30" x2="53" y2="50" stroke="#b45309" stroke-width="0.8" opacity="0.5"/>
+                    <line x1="53" y1="50" x2="67" y2="70" stroke="#b45309" stroke-width="0.8" opacity="0.5"/>
+                    <line x1="67" y1="50" x2="53" y2="70" stroke="#b45309" stroke-width="0.8" opacity="0.5"/>
+                    <line x1="53" y1="70" x2="67" y2="90" stroke="#b45309" stroke-width="0.8" opacity="0.5"/>
+                    <line x1="67" y1="70" x2="53" y2="90" stroke="#b45309" stroke-width="0.8" opacity="0.5"/>
+                    <line x1="53" y1="90" x2="67" y2="110" stroke="#b45309" stroke-width="0.8" opacity="0.5"/>
+                    <line x1="67" y1="90" x2="53" y2="110" stroke="#b45309" stroke-width="0.8" opacity="0.5"/>
+                    <rect x="8" y="21" width="84" height="7" rx="2" fill="url(#craneGrad)" stroke="#ca8a04" stroke-width="1"/>
+                    <rect x="48" y="27" width="24" height="18" rx="4" fill="#ea580c" stroke="#c2410c" stroke-width="1.5"/>
+                    <rect x="52" y="30" width="16" height="10" rx="2" fill="#bae6fd"/>
+                    <rect x="52" y="30" width="16" height="10" rx="2" fill="none" stroke="#7dd3fc" stroke-width="0.8"/>
+                    <line x1="16" y1="28" x2="16" y2="82" stroke="#57534e" stroke-width="1.5" stroke-dasharray="3,2"/>
+                    <path d="M12,80 Q16,92 20,80" fill="none" stroke="#57534e" stroke-width="2.5" stroke-linecap="round"/>
+                    <rect x="78" y="13" width="16" height="10" rx="2" fill="#57534e" stroke="#44403c" stroke-width="1"/>
+                    <line x1="60" y1="13" x2="88" y2="21" stroke="#57534e" stroke-width="1.5"/>
+                    <line x1="60" y1="13" x2="16" y2="21" stroke="#57534e" stroke-width="1.5"/>
+                    <rect x="57" y="8" width="6" height="16" fill="url(#craneGrad)" stroke="#ca8a04" stroke-width="0.8"/>
+                </svg>
+            </div>
+
+            <!-- Bola -->
+            <div class="current-ball-wrapper" id="current-ball">
+                <div class="flag-bg">
+                    <div class="flag-orange">
+                        <svg class="gear-svg" viewBox="0 0 24 24">
+                            <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.04 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.04 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+                        </svg>
+                    </div>
+                    <div class="flag-yellow"></div>
+                    <div class="flag-dark"></div>
+                </div>
+                <div class="ball-shine"></div>
+                <div class="ball-content">
+                    <span class="current-letter" id="current-letter">-</span>
+                    <span class="current-num" id="current-num">-</span>
+                </div>
+            </div>
+
+            <!-- Camión -->
+            <div class="cueca-dancer" id="china-dancer">
+                <svg class="dancer-svg truck-svg" viewBox="0 0 130 150">
+                    <defs>
+                        <linearGradient id="truckBed" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#fbbf24"/>
+                            <stop offset="100%" stop-color="#f59e0b"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M10,65 L10,100 L95,100 L95,55 L35,55 Z" fill="url(#truckBed)" stroke="#ca8a04" stroke-width="1.5"/>
+                    <line x1="30" y1="62" x2="30" y2="100" stroke="#b45309" stroke-width="0.8" opacity="0.4"/>
+                    <line x1="50" y1="57" x2="50" y2="100" stroke="#b45309" stroke-width="0.8" opacity="0.4"/>
+                    <line x1="70" y1="55" x2="70" y2="100" stroke="#b45309" stroke-width="0.8" opacity="0.4"/>
+                    <path d="M12,65 Q30,46 55,48 Q80,46 93,55 L95,55 L35,55 L10,65 Z" fill="#a8a29e"/>
+                    <path d="M14,64 Q30,50 55,51 Q78,50 91,56" fill="none" stroke="#78716c" stroke-width="0.8" stroke-dasharray="2,2"/>
+                    <rect x="95" y="58" width="32" height="42" rx="6" fill="#ea580c" stroke="#c2410c" stroke-width="1.5"/>
+                    <rect x="100" y="63" width="22" height="17" rx="3" fill="#bae6fd" stroke="#7dd3fc" stroke-width="0.8"/>
+                    <line x1="111" y1="63" x2="111" y2="80" stroke="#7dd3fc" stroke-width="0.5"/>
+                    <line x1="100" y1="84" x2="100" y2="98" stroke="#c2410c" stroke-width="1.2"/>
+                    <circle cx="103" cy="91" r="1.5" fill="#44403c"/>
+                    <rect x="5" y="100" width="124" height="8" rx="2" fill="#374151"/>
+                    <circle cx="28" cy="112" r="12" fill="#1c1917" stroke="#374151" stroke-width="2"/>
+                    <circle cx="28" cy="112" r="5.5" fill="#6b7280"/>
+                    <circle cx="28" cy="112" r="2" fill="#374151"/>
+                    <circle cx="55" cy="112" r="12" fill="#1c1917" stroke="#374151" stroke-width="2"/>
+                    <circle cx="55" cy="112" r="5.5" fill="#6b7280"/>
+                    <circle cx="55" cy="112" r="2" fill="#374151"/>
+                    <circle cx="108" cy="112" r="12" fill="#1c1917" stroke="#374151" stroke-width="2"/>
+                    <circle cx="108" cy="112" r="5.5" fill="#6b7280"/>
+                    <circle cx="108" cy="112" r="2" fill="#374151"/>
+                    <rect x="124" y="68" width="4" height="6" rx="1" fill="#fbbf24"/>
+                    <rect x="124" y="88" width="4" height="6" rx="1" fill="#ef4444"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Columna derecha -->
+        <div class="tradition-column">
+            <!-- Semáforo -->
+            <div class="tradition-badge" title="Semáforo">
+                <svg viewBox="0 0 50 50">
+                    <rect x="18" y="2" width="14" height="38" rx="5" fill="#1f2937" stroke="#111827" stroke-width="1.5"/>
+                    <circle cx="25" cy="10" r="4.5" fill="#ef4444" opacity="0.9"/>
+                    <circle cx="25" cy="10" r="2.5" fill="#fca5a5"/>
+                    <circle cx="25" cy="21" r="4.5" fill="#facc15" opacity="0.9"/>
+                    <circle cx="25" cy="21" r="2.5" fill="#fef08a"/>
+                    <circle cx="25" cy="32" r="4.5" fill="#22c55e" opacity="0.9"/>
+                    <circle cx="25" cy="32" r="2.5" fill="#86efac"/>
+                    <rect x="23" y="39" width="4" height="9" fill="#6b7280"/>
+                </svg>
+            </div>
+
+            <!-- Plano -->
+            <div class="tradition-badge" title="Blueprint">
+                <svg viewBox="0 0 50 50">
+                    <rect x="5" y="7" width="40" height="34" rx="2" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+                    <line x1="9" y1="13" x2="41" y2="13" stroke="#93c5fd" stroke-width="0.8"/>
+                    <line x1="9" y1="19" x2="41" y2="19" stroke="#93c5fd" stroke-width="0.8"/>
+                    <line x1="9" y1="25" x2="41" y2="25" stroke="#93c5fd" stroke-width="0.8"/>
+                    <line x1="9" y1="31" x2="41" y2="31" stroke="#93c5fd" stroke-width="0.8"/>
+                    <line x1="9" y1="37" x2="41" y2="37" stroke="#93c5fd" stroke-width="0.8"/>
+                    <rect x="11" y="15" width="14" height="10" fill="none" stroke="#2563eb" stroke-width="1.2"/>
+                    <line x1="11" y1="20" x2="25" y2="20" stroke="#2563eb" stroke-width="0.6"/>
+                    <line x1="18" y1="15" x2="18" y2="25" stroke="#2563eb" stroke-width="0.6"/>
+                    <circle cx="35" cy="30" r="6" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="2,1.5"/>
+                    <line x1="35" y1="26" x2="35" y2="34" stroke="#2563eb" stroke-width="0.6"/>
+                    <line x1="31" y1="30" x2="39" y2="30" stroke="#2563eb" stroke-width="0.6"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard de estadísticas -->
+    <div class="stats-dashboard">
+        <div class="stat-card">
+            <div class="stat-label">Cantados</div>
+            <div class="stat-value" id="stat-called">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Restantes</div>
+            <div class="stat-value orange" id="stat-remaining">75</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Último</div>
+            <div class="stat-value" id="stat-last">—</div>
+        </div>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="progress-wrapper">
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="progress-label">
+            <span>🏁 Inicio</span>
+            <span id="progress-pct">0%</span>
+            <span>🏆 Bingo</span>
+        </div>
+    </div>
+
+    <div class="history-wrapper">
+        <strong>📋 Orden de salida</strong>
+        <div class="history-list" id="history">Aún no se han sacado números. ¡A construir suerte! 🏗️</div>
+    </div>
+
+    <div class="board-container">
+        <h3>🔩 TABLERO B · I · N · G · O</h3>
+        <div class="board-bingo" id="board"></div>
+    </div>
+</div>
+
+<script>
+    /* ═══════════════════════════════════════════
+       SISTEMA DE PARTÍCULAS FLOTANTES (fondo)
+       ═══════════════════════════════════════════ */
+    const pCanvas = document.getElementById('particles-canvas');
+    const pCtx = pCanvas.getContext('2d');
+
+    function resizeParticles() {
+        pCanvas.width = window.innerWidth;
+        pCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeParticles);
+    resizeParticles();
+
+    const bgParticles = [];
+    const symbols = ['⚙', '🔩', '🔧', '⬡', '△', '◇', '▫'];
+
+    class BgParticle {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * pCanvas.width;
+            this.y = Math.random() * pCanvas.height;
+            this.size = Math.random() * 14 + 8;
+            this.speedY = -(Math.random() * 0.3 + 0.08);
+            this.speedX = (Math.random() - 0.5) * 0.2;
+            this.opacity = Math.random() * 0.15 + 0.03;
+            this.rotation = Math.random() * 360;
+            this.rotSpeed = (Math.random() - 0.5) * 0.5;
+            this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
+        }
+        update() {
+            this.y += this.speedY;
+            this.x += this.speedX;
+            this.rotation += this.rotSpeed;
+            if (this.y < -30) {
+                this.y = pCanvas.height + 30;
+                this.x = Math.random() * pCanvas.width;
+            }
+        }
+        draw() {
+            pCtx.save();
+            pCtx.translate(this.x, this.y);
+            pCtx.rotate(this.rotation * Math.PI / 180);
+            pCtx.globalAlpha = this.opacity;
+            pCtx.font = `${this.size}px sans-serif`;
+            pCtx.textAlign = 'center';
+            pCtx.textBaseline = 'middle';
+            pCtx.fillText(this.symbol, 0, 0);
+            pCtx.restore();
+        }
+    }
+
+    for (let i = 0; i < 35; i++) bgParticles.push(new BgParticle());
+
+    function animateBgParticles() {
+        pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+        bgParticles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animateBgParticles);
+    }
+    animateBgParticles();
+
+    /* ════════════════════════════
+       LÓGICA DEL BINGO
+       ════════════════════════════ */
+    let min = 1;
+    let max = 75;
+    let availableNumbers = [];
+    let calledNumbers = [];
+    let isRolling = false;
+
+    const STORAGE_KEY = 'bingo_ict_semana_v2';
+
+    const inputMin = document.getElementById('min-num');
+    const inputMax = document.getElementById('max-num');
+    const displayBall = document.getElementById('current-ball');
+    const displayLetter = document.getElementById('current-letter');
+    const displayNum = document.getElementById('current-num');
+    const historyBox = document.getElementById('history');
+    const board = document.getElementById('board');
+    const btnDraw = document.getElementById('btn-draw');
+    const stage = document.getElementById('stage');
+    const statCalled = document.getElementById('stat-called');
+    const statRemaining = document.getElementById('stat-remaining');
+    const statLast = document.getElementById('stat-last');
+    const progressFill = document.getElementById('progress-fill');
+    const progressPct = document.getElementById('progress-pct');
+
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let confettiParticles = [];
+    const ictColors = ['#ea580c', '#facc15', '#1a365d', '#ffffff', '#22c55e', '#3b82f6'];
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class ConfettiParticle {
+        constructor(x, y, angleDeg, speedBase) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 9 + 7;
+            this.color = ictColors[Math.floor(Math.random() * ictColors.length)];
+            const angleRad = (angleDeg + (Math.random() - 0.5) * 50) * (Math.PI / 180);
+            const speed = speedBase * (0.85 + Math.random() * 0.7);
+            this.speedX = Math.cos(angleRad) * speed;
+            this.speedY = Math.sin(angleRad) * speed;
+            this.gravity = 0.35;
+            this.drag = 0.988;
+            this.wobble = Math.random() * 10;
+            this.wobbleSpeed = 0.1 + Math.random() * 0.08;
+            this.opacity = 1;
+            this.decay = Math.random() * 0.006 + 0.005;
+        }
+        update() {
+            this.speedX *= this.drag;
+            this.speedY *= this.drag;
+            this.speedY += this.gravity;
+            this.x += this.speedX + Math.sin(this.wobble) * 1.8;
+            this.y += this.speedY;
+            this.wobble += this.wobbleSpeed;
+            this.opacity -= this.decay;
+        }
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.wobble);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = Math.max(0, this.opacity);
+            const scaleX = Math.cos(this.wobble * 2);
+            ctx.scale(scaleX, 1);
+            ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size * 0.65);
+            ctx.restore();
+        }
+    }
+
+    function triggerConfettiBig() {
+        const ballRect = displayBall.getBoundingClientRect();
+        const ballX = ballRect.left + ballRect.width / 2;
+        const ballY = ballRect.top + ballRect.height / 2;
+        for (let i = 0; i < 160; i++) confettiParticles.push(new ConfettiParticle(ballX, ballY, Math.random() * 360, 14));
+        for (let i = 0; i < 80; i++) confettiParticles.push(new ConfettiParticle(20, window.innerHeight - 20, -55, 24));
+        for (let i = 0; i < 80; i++) confettiParticles.push(new ConfettiParticle(window.innerWidth - 20, window.innerHeight - 20, -125, 24));
+    }
+
+    function triggerGrandFinale() {
+        let count = 0;
+        const blastInterval = setInterval(() => {
+            triggerConfettiBig();
+            count++;
+            if (count >= 5) clearInterval(blastInterval);
+        }, 500);
+    }
+
+    function animateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = confettiParticles.length - 1; i >= 0; i--) {
+            const p = confettiParticles[i];
+            p.update(); p.draw();
+            if (p.opacity <= 0 || p.y > canvas.height + 40) confettiParticles.splice(i, 1);
+        }
+        requestAnimationFrame(animateConfetti);
+    }
+    animateConfetti();
+
+    function playCelebrationSound() {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const audioCtx = new AudioContext();
+            const notes = [261.63, 329.63, 392.00, 523.25];
+            notes.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime + idx * 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.1 + 0.35);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + idx * 0.1);
+                osc.stop(audioCtx.currentTime + idx * 0.1 + 0.35);
+            });
+        } catch(e) {}
+    }
+
+    function getBingoLetter(num) {
+        if (min === 1 && max === 75) {
+            if (num <= 15) return 'B';
+            if (num <= 30) return 'I';
+            if (num <= 45) return 'N';
+            if (num <= 60) return 'G';
+            return 'O';
+        }
+        const total = max - min + 1;
+        const segment = total / 5;
+        const offset = num - min;
+        if (offset < segment) return 'B';
+        if (offset < segment * 2) return 'I';
+        if (offset < segment * 3) return 'N';
+        if (offset < segment * 4) return 'G';
+        return 'O';
+    }
+
+    function saveState() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                min, max, availableNumbers, calledNumbers,
+                lastLetter: displayLetter.textContent,
+                lastNum: displayNum.textContent
+            }));
+        } catch(e) {}
+    }
+
+    function loadState() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) return JSON.parse(saved);
+        } catch(e) {}
+        return null;
+    }
+
+    function updateDashboard() {
+        const total = max - min + 1;
+        const called = calledNumbers.length;
+        const remaining = total - called;
+        const pct = total > 0 ? Math.round((called / total) * 100) : 0;
+
+        statCalled.textContent = called;
+        statRemaining.textContent = remaining;
+
+        if (calledNumbers.length > 0) {
+            const last = calledNumbers[calledNumbers.length - 1];
+            statLast.textContent = `${last.letra}-${last.numero}`;
+        } else {
+            statLast.textContent = '—';
+        }
+
+        progressFill.style.width = pct + '%';
+        progressPct.textContent = pct + '%';
+    }
+
+    function init(forceReset = false) {
+        const savedState = forceReset ? null : loadState();
+
+        if (savedState && savedState.calledNumbers) {
+            min = savedState.min || 1;
+            max = savedState.max || 75;
+            inputMin.value = min;
+            inputMax.value = max;
+            availableNumbers = savedState.availableNumbers || [];
+            calledNumbers = savedState.calledNumbers || [];
+            displayLetter.textContent = savedState.lastLetter || "-";
+            displayNum.textContent = savedState.lastNum || "-";
+
+            inputMin.disabled = calledNumbers.length > 0;
+            inputMax.disabled = calledNumbers.length > 0;
+            btnDraw.disabled = availableNumbers.length === 0 && calledNumbers.length > 0;
+        } else {
+            min = parseInt(inputMin.value) || 1;
+            max = parseInt(inputMax.value) || 75;
+            if (min >= max) {
+                alert('El número inicial debe ser menor que el final.');
+                inputMax.value = min + 5;
+                max = min + 5;
+            }
+            availableNumbers = [];
+            calledNumbers = [];
+            for (let i = min; i <= max; i++) availableNumbers.push(i);
+            inputMin.disabled = false;
+            inputMax.disabled = false;
+            btnDraw.disabled = false;
+            displayLetter.textContent = "-";
+            displayNum.textContent = "-";
+            localStorage.removeItem(STORAGE_KEY);
+        }
+
+        isRolling = false;
+        displayBall.className = 'current-ball-wrapper';
+        stage.classList.remove('celebrate');
+
+        generarTableroBingo();
+        calledNumbers.forEach(item => {
+            const slot = document.getElementById(`slot-${item.numero}`);
+            if (slot) slot.classList.add('called');
+        });
+
+        updateDashboard();
+        actualizarHistorial();
+        saveState();
+    }
+
+    function generarTableroBingo() {
+        board.innerHTML = '';
+        const letters = ['B', 'I', 'N', 'G', 'O'];
+        letters.forEach(letter => {
+            const row = document.createElement('div');
+            row.classList.add('bingo-row');
+            const letterCell = document.createElement('div');
+            letterCell.classList.add('bingo-header-cell');
+            letterCell.textContent = letter;
+            row.appendChild(letterCell);
+            const numbersRow = document.createElement('div');
+            numbersRow.classList.add('bingo-numbers-row');
+            for (let i = min; i <= max; i++) {
+                if (getBingoLetter(i) === letter) {
+                    const slot = document.createElement('div');
+                    slot.classList.add('ball-slot');
+                    slot.id = `slot-${i}`;
+                    slot.textContent = i;
+                    numbersRow.appendChild(slot);
+                }
+            }
+            row.appendChild(numbersRow);
+            board.appendChild(row);
+        });
+    }
+
+    function sacarNumero() {
+        if (isRolling) return;
+        if (availableNumbers.length === 0) {
+            alert('¡Ya han salido todos los números! ¡Bingo completo!');
+            return;
+        }
+        isRolling = true;
+        btnDraw.disabled = true;
+        inputMin.disabled = true;
+        inputMax.disabled = true;
+        displayBall.classList.remove('landed');
+        displayBall.classList.add('spinning');
+        stage.classList.add('celebrate');
+
+        let rollDuration = 1400;
+        let startTime = Date.now();
+
+        let interval = setInterval(() => {
+            const tempNumber = availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
+            displayLetter.textContent = getBingoLetter(tempNumber);
+            displayNum.textContent = tempNumber;
+            if (Date.now() - startTime >= rollDuration) {
+                clearInterval(interval);
+                finalizarSorteo();
+            }
+        }, 60);
+    }
+
+    function finalizarSorteo() {
+        const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+        const numero = availableNumbers.splice(randomIndex, 1)[0];
+        const letra = getBingoLetter(numero);
+        calledNumbers.push({ letra, numero });
+
+        displayBall.classList.remove('spinning');
+        displayLetter.textContent = letra;
+        displayNum.textContent = numero;
+        displayBall.classList.add('landed');
+
+        playCelebrationSound();
+        triggerConfettiBig();
+        setTimeout(() => stage.classList.remove('celebrate'), 1300);
+
+        const slot = document.getElementById(`slot-${numero}`);
+        if (slot) slot.classList.add('called');
+
+        actualizarHistorial();
+        updateDashboard();
+        saveState();
+
+        isRolling = false;
+        if (availableNumbers.length > 0) {
+            btnDraw.disabled = false;
+        } else {
+            btnDraw.disabled = true;
+            triggerGrandFinale();
+            setTimeout(() => alert('¡Último número cantado! ¡BINGO COMPLETO! 🏗️🎉'), 400);
+        }
+    }
+
+    function actualizarHistorial() {
+        if (calledNumbers.length === 0) {
+            historyBox.textContent = 'Aún no se han sacado números. ¡A construir suerte! 🏗️';
+        } else {
+            historyBox.textContent = calledNumbers.map(item => `${item.letra}-${item.numero}`).join(' • ');
+        }
+    }
+
+    function reiniciarJuego() {
+        if (isRolling) return;
+        if (calledNumbers.length > 0) {
+            if (!confirm('¿Seguro que quieres reiniciar? Se borrarán todos los números guardados.')) return;
+        }
+        init(true);
+    }
+
+    function getRandomSample(arr, size) {
+        let shuffled = [...arr].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, size);
+    }
+
+    function rangeArr(start, end) {
+        let res = [];
+        for (let i = start; i <= end; i++) res.push(i);
+        return res;
+    }
+
+    /* ═════════════════════════════════════
+       GENERADOR DE CARTONES PDF – ICT
+       ═════════════════════════════════════ */
+    function generarCartonesPDF() {
+        const countInput = prompt("¿Cuántos cartones deseas generar?", "12");
+        if (!countInput) return;
+        const totalCards = parseInt(countInput);
+        if (isNaN(totalCards) || totalCards <= 0) {
+            alert("Ingresa un número válido.");
+            return;
+        }
+
+        let printWindow = window.open('', '_blank');
+        let html = `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <title>Cartones Bingo ICT</title>
+            <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
+            <style>
+                @page { size: A4 portrait; margin: 8mm; }
+                * { box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
+                body { margin: 0; padding: 0; background: #fff; }
+                .sheet {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    grid-template-rows: 1fr 1fr;
+                    gap: 8mm;
+                    height: 98vh;
+                    page-break-after: always;
+                }
+                .sheet:last-child { page-break-after: avoid; }
+                .card {
+                    border: 2.5px solid #ea580c;
+                    border-radius: 14px;
+                    padding: 8px 10px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    background: #ffffff;
+                    position: relative;
+                    overflow: hidden;
+                }
+                .card::before {
+                    content: "";
+                    position: absolute;
+                    top: 0; left: 0; right: 0;
+                    height: 4px;
+                    background: linear-gradient(90deg, #ea580c, #facc15);
+                }
+                .card-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    padding-bottom: 3px;
+                    margin-bottom: 4px;
+                    margin-top: 4px;
+                }
+                .card-brand { text-align: left; }
+                .card-title {
+                    font-family: 'Orbitron', sans-serif;
+                    font-size: 14px;
+                    font-weight: 900;
+                    color: #0f172a;
+                    letter-spacing: 1px;
+                    line-height: 1.1;
+                }
+                .card-sub {
+                    font-size: 8.5px;
+                    font-weight: 800;
+                    color: #ea580c;
+                    margin-top: 2px;
+                    letter-spacing: 0.5px;
+                }
+                .card-id {
+                    font-family: 'Orbitron', sans-serif;
+                    font-size: 11px;
+                    font-weight: 900;
+                    color: #0f172a;
+                    background: #fef3c7;
+                    padding: 3px 8px;
+                    border-radius: 6px;
+                    border: 1px solid #fde68a;
+                }
+                .logos-banner {
+                    display: flex;
+                    justify-content: space-evenly;
+                    align-items: center;
+                    padding: 4px 6px;
+                    margin-bottom: 4px;
+                    background: #fffbeb;
+                    border-radius: 8px;
+                    border: 1px solid #fde68a;
+                }
+                .logo-item { display: flex; align-items: center; gap: 5px; }
+                .logo-item-wrap {
+                    width: 36px; height: 36px;
+                    border-radius: 50%;
+                    border: 1.5px solid #ea580c;
+                    overflow: hidden;
+                    display: flex; align-items: center; justify-content: center;
+                    background: #fff;
+                    flex-shrink: 0;
+                }
+                .logo-item-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+                .icn-zoom img { transform: scale(1.42); }
+                .logo-label { font-size: 8px; font-weight: 800; color: #0f172a; letter-spacing: 0.3px; }
+                .caution-tape {
+                    height: 5px;
+                    background: repeating-linear-gradient(-45deg, #facc15, #facc15 5px, #292524 5px, #292524 10px);
+                    border-radius: 2px;
+                    margin-bottom: 4px;
+                }
+                table { width: 100%; border-collapse: collapse; }
+                th {
+                    background: #0f172a; color: #facc15;
+                    font-family: 'Orbitron', sans-serif;
+                    font-size: 14px; font-weight: 900;
+                    padding: 4px 0; border: 1.5px solid #0f172a; width: 20%;
+                }
+                td {
+                    width: 20%; height: 36px; text-align: center;
+                    font-size: 15px; font-weight: 800;
+                    border: 1.5px solid #e2e8f0; color: #1e293b;
+                }
+                td.free {
+                    background: #fef3c7; color: #ea580c;
+                    font-size: 10px; font-weight: 900;
+                }
+                .card-footer {
+                    display: flex; justify-content: space-between;
+                    font-size: 8px; font-weight: 700;
+                    color: #64748b;
+                    border-top: 1px solid #fde68a;
+                    padding-top: 3px; margin-top: 4px;
+                }
+            </style>
+        </head>
+        <body>`;
+
+        for (let i = 0; i < totalCards; i++) {
+            if (i % 4 === 0) html += '<div class="sheet">';
+            const b = getRandomSample(rangeArr(1, 15), 5);
+            const I = getRandomSample(rangeArr(16, 30), 5);
+            const n = getRandomSample(rangeArr(31, 45), 5);
+            const g = getRandomSample(rangeArr(46, 60), 5);
+            const o = getRandomSample(rangeArr(61, 75), 5);
+            const cardNum = String(i + 1).padStart(3, '0');
+
+            html += `
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-brand">
+                        <div class="card-title">🏗️ BINGO ICT</div>
+                        <div class="card-sub">SEMANA DE ESCUELA · ING. CONSTRUCCIÓN Y TRANSPORTE · PUCV</div>
+                    </div>
+                    <span class="card-id">N° ${cardNum}</span>
+                </div>
+                <div class="logos-banner">
+                    <div class="logo-item">
+                        <div class="logo-item-wrap"><img src="Logo ICTRA.png" alt="ICTRA"></div>
+                        <span class="logo-label">CEEITRA</span>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-item-wrap"><img src="LOGO ICC.png" alt="ICC"></div>
+                        <span class="logo-label">CEE ICC</span>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-item-wrap icn-zoom"><img src="LOGO CEE ICN PNG.png" alt="ICN"></div>
+                        <span class="logo-label">CEE ICN</span>
+                    </div>
+                </div>
+                <div class="caution-tape"></div>
+                <table>
+                    <thead><tr><th>B</th><th>I</th><th>N</th><th>G</th><th>O</th></tr></thead>
+                    <tbody>`;
+            for (let r = 0; r < 5; r++) {
+                html += '<tr>';
+                html += `<td>${b[r]}</td><td>${I[r]}</td>`;
+                html += r === 2 ? '<td class="free">⚙️<br>LIBRE</td>' : `<td>${n[r]}</td>`;
+                html += `<td>${g[r]}</td><td>${o[r]}</td></tr>`;
+            }
+            html += `</tbody></table>
+                <div class="card-footer">
+                    <span>ESCUELA DE ING. EN CONSTRUCCIÓN Y TRANSPORTE</span>
+                    <span>¡Semana ICT! 🏗️</span>
+                </div>
+            </div>`;
+            if (i % 4 === 3 || i === totalCards - 1) html += '</div>';
+        }
+
+        html += `<script>window.onload = function() { window.print(); }<\/script></body></html>`;
+
+        printWindow.document.open();
+        printWindow.document.write(html);
+        printWindow.document.close();
+    }
+
+    inputMin.addEventListener('change', () => init(true));
+    inputMax.addEventListener('change', () => init(true));
+    init();
+</script>
+
+</body>
+</html>
